@@ -7,7 +7,7 @@ Description: >
 
 Globals:
   Function:
-    Runtime: python3.11
+    Runtime: python3.12
     Handler: main.lambda_handler
     Architectures:
       - arm64
@@ -28,7 +28,7 @@ Parameters:
   Repository:
     Type: String
   ModelId:
-    Default: "anthropic.claude-3-sonnet-20240229-v1:0"
+    Default: "meta.llama3-70b-instruct-v1:0"
     Type: String
 
 Conditions:
