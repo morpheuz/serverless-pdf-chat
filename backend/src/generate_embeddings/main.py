@@ -44,7 +44,7 @@ def lambda_handler(event, context):
     )
 
     embeddings = BedrockEmbeddings(
-        model_id="amazon.titan-embed-text-v1",
+        model_id="cohere.embed-english-v3",
         client=bedrock_runtime,
         region_name="us-east-1",
     )
