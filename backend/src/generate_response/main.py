@@ -88,7 +88,6 @@ def lambda_handler(event, context):
 
     response = bedrock_chain(faiss_index, memory, human_input, bedrock_runtime)
     if response:
-        print("=== RESPONSE ===")
         print(f"{MODEL_ID} -\nPrompt: {human_input}\n\nResponse: {response['answer']}")
     else:
         raise ValueError(f"Unsupported model ID: {MODEL_ID}")

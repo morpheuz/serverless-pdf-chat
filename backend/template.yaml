@@ -303,7 +303,7 @@ Resources:
             - Sid: "BedrockScopedAccess"
               Effect: "Allow"
               Action: "bedrock:InvokeModel"
-              Resource: "arn:aws:bedrock:*::foundation-model/cohere.embed-english-v3"
+              Resource: "arn:aws:bedrock:*::foundation-model/amazon.titan-embed-text-v1"
       Environment:
         Variables:
           DOCUMENT_TABLE: !Ref DocumentTable
@@ -332,7 +332,7 @@ Resources:
               Action: "bedrock:InvokeModel"
               Resource:
                 - !Sub "arn:aws:bedrock:*::foundation-model/${ModelId}"
-                - "arn:aws:bedrock:*::foundation-model/cohere.embed-english-v3"
+                - "arn:aws:bedrock:*::foundation-model/amazon.titan-embed-text-v1"
       Environment:
         Variables:
           MEMORY_TABLE: !Ref MemoryTable
