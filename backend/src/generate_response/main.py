@@ -2,13 +2,43 @@ import os
 import json
 import boto3
 from aws_lambda_powertools import Logger
-from langchain_community.chat_models import BedrockChat
+
 from langchain.memory.chat_message_histories import DynamoDBChatMessageHistory
 from langchain.memory import ConversationBufferMemory
 from langchain.embeddings import BedrockEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chains import ConversationalRetrievalChain
 
+## FIX NECESSARY FOR LLAMA3 UNTIL LANGCHAIN IS NOT UPDATED
+## https://github.com/langchain-ai/langchain-aws/issues/31
+from typing import List
+from langchain_aws.chat_models import BedrockChat
+import langchain_aws.chat_models.bedrock
+from langchain_core.messages import BaseMessage, AIMessage, HumanMessage
+
+def _convert_one_message_to_text_llama(message: BaseMessage) -> str:
+    if isinstance(message, ChatMessage):
+        message_text = f"<|begin_of_text|><|start_header_id|>{message.role}<|end_header_id|>{message.content}<|eot_id|>"
+    elif isinstance(message, HumanMessage):
+        message_text = f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>{message.content}<|eot_id|>"
+    elif isinstance(message, AIMessage):
+        message_text = f"<|begin_of_text|><|start_header_id|>assistant<|end_header_id|>{message.content}<|eot_id|>"
+    elif isinstance(message, SystemMessage):
+        message_text = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>{message.content}<|eot_id|>"
+    else:
+        raise ValueError(f"Got unknown type {message}")
+    return message_text
+
+def convert_messages_to_prompt_llama(messages: List[BaseMessage]) -> str:
+    """Convert a list of messages to a prompt for llama."""
+
+    return "\n".join(
+        [_convert_one_message_to_text_llama(message) for message in messages] + ["<|start_header_id|>assistant<|end_header_id|>\n\n"]
+    )
+
+langchain_aws.chat_models.bedrock._convert_one_message_to_text_llama = _convert_one_message_to_text_llama
+langchain_aws.chat_models.bedrock.convert_messages_to_prompt_llama = convert_messages_to_prompt_llama
+#### END OF FIX
 
 MEMORY_TABLE = os.environ["MEMORY_TABLE"]
 BUCKET = os.environ["BUCKET"]
