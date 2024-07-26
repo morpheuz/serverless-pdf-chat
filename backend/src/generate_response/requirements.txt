@@ -7,3 +7,4 @@ langchain-aws
 langchain-core
 langchain-community
 urllib3
+transformers
