@@ -266,6 +266,30 @@ Resources:
             Path: /doc
             Method: GET
 
+  DeleteDocumentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/delete_document/
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DocumentTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MemoryTable
+        - S3CrudPolicy:
+            BucketName: !Ref DocumentBucket
+      Environment:
+        Variables:
+          DOCUMENT_TABLE: !Ref DocumentTable
+          MEMORY_TABLE: !Ref MemoryTable
+          BUCKET: !Ref DocumentBucket
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /doc/delete/{documentid}
+            Method: POST
+
   AddConversationFunction:
     Type: AWS::Serverless::Function
     Properties:
