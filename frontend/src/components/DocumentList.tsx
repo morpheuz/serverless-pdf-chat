@@ -43,7 +43,7 @@ const DocumentList: React.FC = () => {
           documents.length > 0 &&
           documents.map((document: Document) => (
             <div key={document.documentid} className="block p-6 bg-white border border-gray-200 rounded">
-              <DocumentDetail {...document} />
+              <DocumentDetail onDelete={fetchData} {...document} />
             </div>
           ))}
       </div>

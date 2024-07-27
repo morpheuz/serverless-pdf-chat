@@ -14,12 +14,15 @@ import {
 } from "@heroicons/react/24/outline";
 
 const DocumentDetail: React.FC<Document> = (document: Document) => {
-  const deleteDocument = async (documentid) => {
-     const deleteDoc = await API.post(
+
+  const deleteDocument = async (documentid, onDelete) => {
+    const deleteDoc = await API.post(
       "serverless-pdf-chat",
       `/doc/delete/${documentid}`,
       {},
-    );
+    ).then(() => {
+      onDelete();
+    });
   };
 
   return (
@@ -66,7 +69,11 @@ const DocumentDetail: React.FC<Document> = (document: Document) => {
 	<div>
 	  <div className="inline-flex items-center">
 	      <button
-	        onClick={async () => {await deleteDocument(document.documentid)}}
+	        onClick={
+		    async () => {
+		    await deleteDocument(document.documentid, document.onDelete)
+		    }
+		}
 		className="inline-flex items-center hover:bg-gray-200"
 		documentid={document.documentid}
 	      >

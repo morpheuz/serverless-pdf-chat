@@ -1,5 +1,6 @@
 export interface Document {
   documentid: string;
+  onDelete: () => Promise<void>;
   userid: string;
   filename: string;
   filesize: string;
