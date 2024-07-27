@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { API } from "aws-amplify";
 import { Link } from "react-router-dom";
 import DocumentDetail from "./DocumentDetail";
-import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
 import { Document } from "../common/types";
+import { Params } from "react-router-dom";
 import Loading from "../../public/loading-grid.svg";
 
 const DocumentList: React.FC = () => {
@@ -41,13 +42,9 @@ const DocumentList: React.FC = () => {
         {documents &&
           documents.length > 0 &&
           documents.map((document: Document) => (
-            <Link
-              to={`/doc/${document.documentid}/${document.conversations[0].conversationid}/`}
-              key={document.documentid}
-              className="block p-6 bg-white border border-gray-200 rounded hover:bg-gray-100"
-            >
+            <div key={document.documentid} className="block p-6 bg-white border border-gray-200 rounded">
               <DocumentDetail {...document} />
-            </Link>
+            </div>
           ))}
       </div>
       {listStatus === "idle" && documents.length === 0 && (
