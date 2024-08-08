@@ -11,7 +11,6 @@ MEMORY_TABLE = os.environ["MEMORY_TABLE"]
 QUEUE = os.environ["QUEUE"]
 BUCKET = os.environ["BUCKET"]
 
-
 ddb = boto3.resource("dynamodb")
 document_table = ddb.Table(DOCUMENT_TABLE)
 memory_table = ddb.Table(MEMORY_TABLE)
@@ -26,14 +25,22 @@ def lambda_handler(event, context):
     split = key.split("/")
     user_id = split[0]
     file_name = split[1]
+    extension = file_name.split(".")[1]
 
     document_id = shortuuid.uuid()
-
     s3.download_file(BUCKET, key, f"/tmp/{file_name}")
 
-    with open(f"/tmp/{file_name}", "rb") as f:
-        reader = PyPDF2.PdfReader(f)
-        pages = str(len(reader.pages))
+    pages = 1;
+    if extension == "pdf":
+        with open(f"/tmp/{file_name}", "rb") as f:
+            reader = PyPDF2.PdfReader(f)
+            pages = str(len(reader.pages))
+    elif extension == "json":
+        with open(f"/tmp/{file_name}", "rb") as f:
+            data = json.load(f)
+            pages = len(data)
+    else:
+        pages = "1"
 
     conversation_id = shortuuid.uuid()
 
@@ -64,4 +71,5 @@ def lambda_handler(event, context):
         "key": key,
         "user": user_id,
     }
+
     sqs.send_message(QueueUrl=QUEUE, MessageBody=json.dumps(message))

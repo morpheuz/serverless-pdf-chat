@@ -1,3 +1,4 @@
 boto3==1.28.57
 botocore==1.31.57
 shortuuid==1.0.11
+googlesearch-python>=1.2

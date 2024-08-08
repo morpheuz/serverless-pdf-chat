@@ -226,7 +226,7 @@ Resources:
                 Rules:
                   - Name: suffix
                     Value: .pdf
-        S3UploadHTMLEvent:
+        S3UploadJSONEvent:
           Type: S3
           Properties:
             Bucket: !Ref DocumentBucket
@@ -236,7 +236,7 @@ Resources:
               S3Key:
                 Rules:
                   - Name: suffix
-                    Value: .html
+                    Value: .json
 
 
   GetDocumentFunction:
